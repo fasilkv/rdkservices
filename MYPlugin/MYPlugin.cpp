@@ -77,7 +77,7 @@ namespace WPEFramework {
  
  
  	uint32_t MYPlugin::getMYPluginList(const JsonObject& parameters, JsonObject& response)
-        {   //sample servicemanager response:{"success":true,"supportedSettopResolutions":["720p","1080i","1080p60"]}
+        {   ///sample servicemanager response: {"jsonrpc":"2.0","id":3,"result":{"Supported plugin list":["plug-A","plug-B","plug-C","plug-D","plug-E"],"success":true}}
                 LOGINFOMETHOD();
                 vector<string> List_plugin;
 		List_plugin.push_back ("plug-A");
@@ -91,13 +91,13 @@ namespace WPEFramework {
 	}
 
 	uint32_t MYPlugin::getMYPluginInfo(const JsonObject& parameters, JsonObject& response)
-	{   //sample servicemanager response:{"success":true,"supportedTvResolutions":["480i","480p","576i","720p","1080i","10     80p"]}
+	{   //sample servicemanager response:{"success":true,"plugin info ":["xyz-plugin","ID:430HT5"]}
  	LOGINFOMETHOD();
   	string videoDisplay = parameters.HasLabel("plugin_name") ? parameters["plugin_name"].String() : "plug-A";
   	vector<string> plugin_info;
 		plugin_info.push_back ("xyz-plugin");
-		plugin_info.push_back ("no:430HT5");
-            setResponseArray(response, "supportedTvResolutions", plugin_info);
+		plugin_info.push_back ("ID:430HT5");
+            setResponseArray(response, "plugin info", plugin_info);
 	    returnResponse(true);
          }
 
