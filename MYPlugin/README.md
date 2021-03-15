@@ -242,6 +242,7 @@ MYPlugin API :
 	{"jsonrpc":"2.0","id":3,"result":{"success":true}} 
 
 
+
  Other APIs
  ----------- 
 
@@ -257,7 +258,16 @@ MYPlugin API :
 
  getMYPluginInfo : 
 
-	curl http://127.0.0.1:9998/jsonrpc --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0", "id":3, "method":"org.rdk.MYPlugin.1.getMYPluginInfo", "params":{"videoDisplay//plugin_name":"plug-A"}}' 
+	curl http://127.0.0.1:9998/jsonrpc --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0", "id":3, "method":"org.rdk.MYPlugin.1.getMYPluginInfo", "params":{"plugin_name":"plug-A"}}' 
+	{"jsonrpc":"2.0","id":3,"result":{"supportedTvResolutions":["xyz-plugin","no:430HT5"],"success":true}}root@raspberrypi-rdk-mc:~#
+
+event API when hdmi connected :
+	curl http://127.0.0.1:9998/jsonrpc --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0", "id":3, "method":"org.rdk.MYPlugin.1.getConnectedVideoDisplays"}'
+	{"jsonrpc":"2.0","id":3,"result":{"connectedVideoDisplays":["HDMI0"],"success":true}}root@raspberrypi-rdk-mc:~#
+
+event API when hdmi connected :
+	root@raspberrypi-rdk-mc:~# curl http://127.0.0.1:9998/jsonrpc --header "Content-Type: application/json" --request POST --data '{"jsonrpc":"2.0", "id":3, "method":"org.rdk.MYPlugin.1.getConnectedVideoDisplays"}'
+	{"jsonrpc":"2.0","id":3,"result":{"connectedVideoDisplays":[],"success":true}}root@raspberrypi-rdk-mc:~#
 
 Controller UI :
 -----------------
@@ -268,6 +278,5 @@ Controller UI :
 
  In the Controller tab, any plugins can be enabled or disabled. On loading the controller UI initially,
  it loads the Controller tab with all possible services with the enable or disable status.
- 
- 
- ```
+
+```
