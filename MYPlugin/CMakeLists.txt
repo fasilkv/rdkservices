@@ -1,33 +1,28 @@
-# If not stated otherwise in this file or this component's license file the
-# following copyright and licenses apply:
 #
-# Copyright 2020 RDK Management
+# this file contains a set of directives and instructions describing the project's source files and targets (executable, library, or both).
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
-set(PLUGIN_NAME MYPlugin)
+
+set(PLUGIN_NAME MYPlugin)                                 # to set a environment variable set(<variable> <value>)
 set(MODULE_NAME ${NAMESPACE}${PLUGIN_NAME})
 
-find_package(${NAMESPACE}Plugins REQUIRED)
+find_package(${NAMESPACE}Plugins REQUIRED)                # to Finds and loads settings from an external project.
+
+
+#Adds a library target called <name> to be built from the source files listed in the command invocation. The <name> corresponds to the logical target name and must be globally unique within a project.
 
 add_library(${MODULE_NAME} SHARED
         MYPlugin.cpp
         Module.cpp
         ../helpers/utils.cpp)
 
+#The syntax for the command is to list all the targets you want to change, and then provide the values you want to set next. You can use any prop value pair you want and extract it later with the get_property() or get_target_property() command.
+
 set_target_properties(${MODULE_NAME} PROPERTIES
         CXX_STANDARD 11
         CXX_STANDARD_REQUIRED YES)
+
+#Specifies include directories to use when compiling a given target.
 
 target_include_directories(${MODULE_NAME} PRIVATE ../helpers)
 
@@ -40,9 +35,11 @@ if (DS_FOUND)
     target_include_directories(${MODULE_NAME} PRIVATE ${DS_INCLUDE_DIRS})
     target_link_libraries(${MODULE_NAME} PRIVATE ${NAMESPACE}Plugins::${NAMESPACE}Plugins ${IARMBUS_LIBRARIES} ${DS_LIBRARIES})
 else (DS_FOUND)
-    target_link_libraries(${MODULE_NAME} PRIVATE ${NAMESPACE}Plugins::${NAMESPACE}Plugins)
+   #Specify libraries or flags to use when linking a given target and/or its dependents.
+   target_link_libraries(${MODULE_NAME} PRIVATE ${NAMESPACE}Plugins::${NAMESPACE}Plugins)
 endif(DS_FOUND)
 
+#his command generates installation rules for a project. Install rules specified by calls to the install() command within a source directory are executed in order during installation.
 install(TARGETS ${MODULE_NAME}
         DESTINATION lib/${STORAGE_DIRECTORY}/plugins)
 

@@ -1,29 +1,11 @@
-/**
-* If not stated otherwise in this file or this component's LICENSE
-* file the following copyright and licenses apply:
-*
-* Copyright 2019 RDK Management
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-**/
 
-#pragma once
+#pragma once				////Specifies that the compiler includes the header file only once, when compiling a source code file.
 
-#include "Module.h"
-#include "utils.h"
-#include "AbstractPlugin.h"
-#include "libIBus.h"
-#include "irMgr.h"
+#include "Module.h"                     //this file contain module details
+#include "utils.h"			//this file contain build in common functionalities
+#include "AbstractPlugin.h"		//it contain abstract plugin class with essential virtual methods that need to be implemented in the derived plugin class.
+#include "libIBus.h"			// this file contain multiple IARM-Bus instances
+#include "irMgr.h"			// this file related to IARM bus manager
 
 namespace WPEFramework {
 
@@ -47,38 +29,33 @@ namespace WPEFramework {
             typedef Core::JSON::ArrayType<JString> JStringArray;
             typedef Core::JSON::Boolean JBool;
 
-            // We do not allow this plugin to be copied !!
-//            DisplaySettings(const DisplaySettings&) = delete;
-//            DisplaySettings& operator=(const DisplaySettings&) = delete;
 
             //Begin methods
-//////////////////////////////////////////
-            uint32_t getMYPluginStatus(const JsonObject& parameters, JsonObject& response);
-            uint32_t getMYPluginList(const JsonObject& parameters, JsonObject& response);
-	    uint32_t getMYPluginInfo(const JsonObject& parameters, JsonObject& response);
+            uint32_t getMYPluginStatus(const JsonObject& parameters, JsonObject& response);  // to retrieve plugin status(eg)
+            uint32_t getMYPluginList(const JsonObject& parameters, JsonObject& response);    // to get coonected plugins(eg)
+	    uint32_t getMYPluginInfo(const JsonObject& parameters, JsonObject& response);    // to retrive selected plugin info(eg)
 
-	    uint32_t getConnectedVideoDisplays(const JsonObject& parameters, JsonObject& response);
+	    uint32_t getConnectedVideoDisplays(const JsonObject& parameters, JsonObject& response); // to get information about connected display
 
-//////////////////////////////////////////
-	//Begin event
-	 void connectedVideoDisplaysUpdated(int hdmiHotPlugEvent);
-	 //End events
+	    //Begin event
+	    void connectedVideoDisplaysUpdated(int hdmiHotPlugEvent);   //for event handling
+	    //End events
 
 
 
         public:
-            MYPlugin();
-            virtual ~MYPlugin();
-            virtual const string Initialize(PluginHost::IShell* service) override;
-            virtual void Deinitialize(PluginHost::IShell* service) override;
+            MYPlugin();									// constructor
+            virtual ~MYPlugin();							// destructor
+            virtual const string Initialize(PluginHost::IShell* service) override;	//initialize IARM plugin services
+            virtual void Deinitialize(PluginHost::IShell* service) override;		//deinitialize IARM plugin services
         public:
             static MYPlugin* _instance;
 
         private:
-            void InitializeIARM();
-            void DeinitializeIARM();
-            static void dsHdmiEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len);
-            void getConnectedVideoDisplaysHelper(std::vector<string>& connectedDisplays);
+            void InitializeIARM();										// calling IARM services
+            void DeinitializeIARM();   										// calling IARM services
+            static void dsHdmiEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len);  // display hdmi event handler
+            void getConnectedVideoDisplaysHelper(std::vector<string>& connectedDisplays);			// display hdmi calls
 
         };
 	} // namespace Plugin

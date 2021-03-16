@@ -1,31 +1,10 @@
-/**
-* If not stated otherwise in this file or this component's LICENSE
-* file the following copyright and licenses apply:
-*
-* Copyright 2019 RDK Management
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-**/
+/*
+This class does contain all the definitions for the methods declared in the Plugin.h and those definitions
+should be defined inside the below namespace.
+*/
 
-//I have put several "TODO(MROLLINS)" in the code below to mark areas of concern I encountered
-//  when refactoring the servicemanager's version of displaysettings into this new thunder plugin format
-
-
-
+// include all the depended libraries
 #include "MYPlugin.h"
-//#include "tracing/Logging.h"
-
-
 #include <algorithm>
 #include "dsMgr.h"
 #include "libIBusDaemon.h"
@@ -35,9 +14,6 @@
 #include "videoOutputPortType.hpp"
 #include "videoOutputPortConfig.hpp"
 #include "videoResolution.hpp"
-#include "audioOutputPort.hpp"
-#include "audioOutputPortType.hpp"
-#include "audioOutputPortConfig.hpp"
 #include "manager.hpp"
 #include "dsUtl.h"
 #include "dsError.h"
@@ -50,7 +26,7 @@
 #include <syscall.h>
 #include "utils.h"
 
-#define HDMI_HOT_PLUG_EVENT_CONNECTED 0
+#define HDMI_HOT_PLUG_EVENT_CONNECTED 0                 //for hdmi plugin event
 
 
 
@@ -61,30 +37,32 @@ namespace WPEFramework {
 
     namespace Plugin {
 
-        SERVICE_REGISTRATION(MYPlugin, 1, 0);
+        SERVICE_REGISTRATION(MYPlugin, 1, 0);		//service registration MACRO used for registering service
 
         MYPlugin* MYPlugin::_instance = nullptr;
 
-        MYPlugin::MYPlugin()
+        MYPlugin::MYPlugin()				//constructor
             : AbstractPlugin()
         {
             LOGINFO("ctor");
             MYPlugin::_instance = this;
-
+	    
+	    // All the methods declared in Plugin.h should be registered here	
             registerMethod("getMYPluginStatus", &MYPlugin::getMYPluginStatus, this);
             registerMethod("getMYPluginList", &MYPlugin::getMYPluginList, this);
             registerMethod("getMYPluginInfo", &MYPlugin::getMYPluginInfo, this);
             registerMethod("getConnectedVideoDisplays", &MYPlugin::getConnectedVideoDisplays, this);
 
-
         }
 
-        MYPlugin::~MYPlugin()
+        MYPlugin::~MYPlugin()				//destrucor
         {
             LOGINFO("dtor");
             MYPlugin::_instance = nullptr;
         }
 
+
+	//initialize and deinitialize or activate or deactivate handler for the plugin services:
         const string MYPlugin::Initialize(PluginHost::IShell* /* service */)
         {
             LOGINFO();
@@ -113,7 +91,6 @@ namespace WPEFramework {
 
             try
             {
-                //TODO(MROLLINS) this is probably per process so we either need to be running in our own process or be carefull no other plugin is calling it
                 device::Manager::Initialize();
                 LOGINFO("device::Manager::Initialize success");
             }
@@ -136,7 +113,6 @@ namespace WPEFramework {
 
             try
             {
-                //TODO(MROLLINS) this is probably per process so we either need to be running in our own process or be carefull no other plugin is calling it
                 device::Manager::DeInitialize();
                 LOGINFO("device::Manager::DeInitialize success");
             }
@@ -147,16 +123,13 @@ namespace WPEFramework {
         }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+	// hedmi event handler
         void MYPlugin::dsHdmiEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len)
         {
             LOGINFO();
             switch (eventId)
             {
             case IARM_BUS_DSMGR_EVENT_HDMI_HOTPLUG :
-                //TODO(MROLLINS) note that there are several services listening for the notifyHdmiHotPlugEvent ServiceManagerNotifier broadcast
-                //So if DisplaySettings becomes the owner/originator of this, then those future thunder plugins need to listen to our event
-                //But of course, nothing is stopping any thunder plugin for listening to iarm event directly -- this is getting murky
                 {
                     IARM_Bus_DSMgr_EventData_t *eventData = (IARM_Bus_DSMgr_EventData_t *)data;
                     int hdmi_hotplug_event = eventData->data.hdmi_hpd.event;
@@ -172,7 +145,7 @@ namespace WPEFramework {
         }
 
 
-
+	// sending responce to json interface
         void setResponseArray(JsonObject& response, const char* key, const vector<string>& items)
         {
             JsonArray arr;
@@ -183,12 +156,11 @@ namespace WPEFramework {
             string json;
             response.ToString(json);
         }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
        
-
+	
+	// to get connected video displays
         uint32_t MYPlugin::getConnectedVideoDisplays(const JsonObject& parameters, JsonObject& response)
-        {   //sample servicemanager response: {"connectedVideoDisplays":["HDMI0"],"success":true}
-            //this                          : {"connectedVideoDisplays":["HDMI0"]}
+        {
             LOGINFOMETHOD();
 
             vector<string> connectedVideoDisplays;
@@ -232,12 +204,9 @@ namespace WPEFramework {
 
 
 
-	 //Begin methods
-
-
+	// Begin methods
 	uint32_t MYPlugin::getMYPluginStatus(const JsonObject& parameters, JsonObject& response)
-        {   //sample servicemanager response: {"connection status from plugin":["CONNECTED"],"success":true}i
-            //this                          : {connection status from plugin":["CONNECTED"]}
+        {  
             LOGINFOMETHOD();
 
             vector<string> plug_status;
@@ -248,7 +217,7 @@ namespace WPEFramework {
  
  
  	uint32_t MYPlugin::getMYPluginList(const JsonObject& parameters, JsonObject& response)
-        {   //sample servicemanager response:{"success":true,"supportedSettopResolutions":["720p","1080i","1080p60"]}
+        {   
                 LOGINFOMETHOD();
                 vector<string> List_plugin;
 		List_plugin.push_back ("plug-A");
@@ -262,7 +231,7 @@ namespace WPEFramework {
 	}
 
 	uint32_t MYPlugin::getMYPluginInfo(const JsonObject& parameters, JsonObject& response)
-	{   //sample servicemanager response:{"success":true,"supportedTvResolutions":["480i","480p","576i","720p","1080i","10     80p"]}
+	{
  	LOGINFOMETHOD();
   	string videoDisplay = parameters.HasLabel("plugin_name") ? parameters["plugin_name"].String() : "plug-A";
   	vector<string> plugin_info;
@@ -271,8 +240,6 @@ namespace WPEFramework {
             setResponseArray(response, "supportedTvResolutions", plugin_info);
 	    returnResponse(true);
          }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         void MYPlugin::connectedVideoDisplaysUpdated(int hdmiHotPlugEvent)
@@ -301,7 +268,6 @@ namespace WPEFramework {
             previousStatus = hdmiHotPlugEvent;
         }
 
-/////////////////////////////////////////////////////////////////////////////////////////////
 
 
     } // namespace Plugin
