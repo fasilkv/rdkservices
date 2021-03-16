@@ -2,7 +2,7 @@
 Steps involved in implementing new RDK services Plug-In
 --------------------------------------------------------
 
- reference: https://wiki.rdkcentral.com/display/RDK/How+to+Make+a+Thunder+Nano+Service
+ reference: https://wiki.rdkcentral.com/display/RDK/User+Manual+-+RDK+Services+on+RPi
 
 
  In RDK services -plugins workspace:
