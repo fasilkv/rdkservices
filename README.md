@@ -178,7 +178,7 @@ code control Flow:
 
 To add Plugin in the recipe file :
 ----------------------------
- Open rdkservices recepi file
+ Open rdkservices recipe file
 	vi meta-rdk-video/recipes-extended/rdkservices/rdkservices_git.bb
 
  add below line in between other plug-in flags
@@ -187,7 +187,7 @@ To add Plugin in the recipe file :
 	
 To add plugin in rdkservices CMakeLists.txt:
 -------------------------------------------
- Open rdkservises directory 
+ Open rdkservices directory 
 	cd build-raspberrypi-rdk-mc/tmp/work/cortexa7t2hf-neon-vfpv4-rdk-linux-gnueabi/rdkservices/3.0+gitAUTOINC+1180f1ee5b-r1/git/
  open CmakeLists.txt
 	vi CmakeLists.txt

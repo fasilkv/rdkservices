@@ -1,5 +1,5 @@
 
-#pragma once				////Specifies that the compiler includes the header file only once, when compiling a source code file.
+#pragma once				//Specifies that the compiler includes the header file only once when compiling a source code file.
 
 #include "Module.h"                     //this file contain module details
 #include "utils.h"			//this file contain build in common functionalities
@@ -18,7 +18,7 @@ namespace WPEFramework {
 		// - exists
 		// - register
 		// - unregister
-		// Any other methood to be handled by this plugin  can be added can be added by using the
+		// Any other method to be handled by this plugin  can be added by using the
 		// templated methods Register on the PluginHost::JSONRPC class.
 		// As the registration/unregistration of notifications is realized by the class PluginHost::JSONRPC,
 		// this class exposes a public method called, Notify(), using this methods, all subscribed clients
