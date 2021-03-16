@@ -1,9 +1,0 @@
-{
- "locator":"libWPEFrameworkMYPlugin.so",
- "classname":"MYPlugin",
- "precondition":[
-  "Platform"
- ],
- "callsign":"org.rdk.MYPlugin",
- "autostart":false
-}

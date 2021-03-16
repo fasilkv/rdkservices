@@ -4,7 +4,7 @@ should be defined inside the below namespace.
 */
 
 // include all the depended libraries
-#include "MYPlugin.h"
+#include "PluginTemplate.h"
 #include <algorithm>
 #include "dsMgr.h"
 #include "libIBusDaemon.h"
@@ -37,33 +37,33 @@ namespace WPEFramework {
 
     namespace Plugin {
 
-        SERVICE_REGISTRATION(MYPlugin, 1, 0);		//service registration MACRO used for registering service
+        SERVICE_REGISTRATION(PluginTemplate, 1, 0);		//service registration MACRO used for registering service
 
-        MYPlugin* MYPlugin::_instance = nullptr;
+        PluginTemplate* PluginTemplate::_instance = nullptr;
 
-        MYPlugin::MYPlugin()				//constructor
+        PluginTemplate::PluginTemplate()				//constructor
             : AbstractPlugin()
         {
             LOGINFO("ctor");
-            MYPlugin::_instance = this;
+            PluginTemplate::_instance = this;
 	    
 	    // All the methods declared in Plugin.h should be registered here	
-            registerMethod("getMYPluginStatus", &MYPlugin::getMYPluginStatus, this);
-            registerMethod("getMYPluginList", &MYPlugin::getMYPluginList, this);
-            registerMethod("getMYPluginInfo", &MYPlugin::getMYPluginInfo, this);
-            registerMethod("getConnectedVideoDisplays", &MYPlugin::getConnectedVideoDisplays, this);
+            registerMethod("getPluginTemplateStatus", &PluginTemplate::getPluginTemplateStatus, this);
+            registerMethod("getPluginTemplateList", &PluginTemplate::getPluginTemplateList, this);
+            registerMethod("getPluginTemplateInfo", &PluginTemplate::getPluginTemplateInfo, this);
+            registerMethod("getConnectedVideoDisplays", &PluginTemplate::getConnectedVideoDisplays, this);
 
         }
 
-        MYPlugin::~MYPlugin()				//destrucor
+        PluginTemplate::~PluginTemplate()				//destrucor
         {
             LOGINFO("dtor");
-            MYPlugin::_instance = nullptr;
+            PluginTemplate::_instance = nullptr;
         }
 
 
 	//initialize and deinitialize or activate or deactivate handler for the plugin services:
-        const string MYPlugin::Initialize(PluginHost::IShell* /* service */)
+        const string PluginTemplate::Initialize(PluginHost::IShell* /* service */)
         {
             LOGINFO();
 
@@ -72,14 +72,14 @@ namespace WPEFramework {
             return (string());
         }
 
-        void MYPlugin::Deinitialize(PluginHost::IShell* /* service */)
+        void PluginTemplate::Deinitialize(PluginHost::IShell* /* service */)
         {
             LOGINFO();
 	    DeinitializeIARM();
 
         }
 
-        void MYPlugin::InitializeIARM()
+        void PluginTemplate::InitializeIARM()
         {
             LOGINFO();
 
@@ -101,7 +101,7 @@ namespace WPEFramework {
         }
 
 
-        void MYPlugin::DeinitializeIARM()
+        void PluginTemplate::DeinitializeIARM()
         {
             LOGINFO();
 
@@ -124,7 +124,7 @@ namespace WPEFramework {
 
 
 	// hedmi event handler
-        void MYPlugin::dsHdmiEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len)
+        void PluginTemplate::dsHdmiEventHandler(const char *owner, IARM_EventId_t eventId, void *data, size_t len)
         {
             LOGINFO();
             switch (eventId)
@@ -134,8 +134,8 @@ namespace WPEFramework {
                     IARM_Bus_DSMgr_EventData_t *eventData = (IARM_Bus_DSMgr_EventData_t *)data;
                     int hdmi_hotplug_event = eventData->data.hdmi_hpd.event;
                     LOGINFO("Received IARM_BUS_DSMGR_EVENT_HDMI_HOTPLUG  event data:%d ", hdmi_hotplug_event);
-                    if(MYPlugin::_instance)
-                        MYPlugin::_instance->connectedVideoDisplaysUpdated(hdmi_hotplug_event);
+                    if(PluginTemplate::_instance)
+                        PluginTemplate::_instance->connectedVideoDisplaysUpdated(hdmi_hotplug_event);
                 }
                 break;
             default:
@@ -159,7 +159,7 @@ namespace WPEFramework {
        
 	
 	// to get connected video displays
-        uint32_t MYPlugin::getConnectedVideoDisplays(const JsonObject& parameters, JsonObject& response)
+        uint32_t PluginTemplate::getConnectedVideoDisplays(const JsonObject& parameters, JsonObject& response)
         {
             LOGINFOMETHOD();
 
@@ -170,7 +170,7 @@ namespace WPEFramework {
         }
 
 
-        void MYPlugin::getConnectedVideoDisplaysHelper(vector<string>& connectedDisplays)
+        void PluginTemplate::getConnectedVideoDisplaysHelper(vector<string>& connectedDisplays)
         {
             LOGINFO();
             try
@@ -205,7 +205,7 @@ namespace WPEFramework {
 
 
 	// Begin methods
-	uint32_t MYPlugin::getMYPluginStatus(const JsonObject& parameters, JsonObject& response)
+	uint32_t PluginTemplate::getPluginTemplateStatus(const JsonObject& parameters, JsonObject& response)
         {  
             LOGINFOMETHOD();
 
@@ -216,7 +216,7 @@ namespace WPEFramework {
         }
  
  
- 	uint32_t MYPlugin::getMYPluginList(const JsonObject& parameters, JsonObject& response)
+ 	uint32_t PluginTemplate::getPluginTemplateList(const JsonObject& parameters, JsonObject& response)
         {   
                 LOGINFOMETHOD();
                 vector<string> List_plugin;
@@ -230,7 +230,7 @@ namespace WPEFramework {
 		returnResponse(true);
 	}
 
-	uint32_t MYPlugin::getMYPluginInfo(const JsonObject& parameters, JsonObject& response)
+	uint32_t PluginTemplate::getPluginTemplateInfo(const JsonObject& parameters, JsonObject& response)
 	{
  	LOGINFOMETHOD();
   	string videoDisplay = parameters.HasLabel("plugin_name") ? parameters["plugin_name"].String() : "plug-A";
@@ -242,7 +242,7 @@ namespace WPEFramework {
          }
 
 
-        void MYPlugin::connectedVideoDisplaysUpdated(int hdmiHotPlugEvent)
+        void PluginTemplate::connectedVideoDisplaysUpdated(int hdmiHotPlugEvent)
         {
             LOGINFO();
             static int previousStatus = HDMI_HOT_PLUG_EVENT_CONNECTED;

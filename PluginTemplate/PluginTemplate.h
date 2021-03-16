@@ -23,7 +23,7 @@ namespace WPEFramework {
 		// As the registration/unregistration of notifications is realized by the class PluginHost::JSONRPC,
 		// this class exposes a public method called, Notify(), using this methods, all subscribed clients
 		// will receive a JSONRPC message as a notification, in case this method is called.
-        class MYPlugin : public AbstractPlugin {
+        class PluginTemplate : public AbstractPlugin {
         private:
             typedef Core::JSON::String JString;
             typedef Core::JSON::ArrayType<JString> JStringArray;
@@ -31,9 +31,9 @@ namespace WPEFramework {
 
 
             //Begin methods
-            uint32_t getMYPluginStatus(const JsonObject& parameters, JsonObject& response);  // to retrieve plugin status(eg)
-            uint32_t getMYPluginList(const JsonObject& parameters, JsonObject& response);    // to get coonected plugins(eg)
-	    uint32_t getMYPluginInfo(const JsonObject& parameters, JsonObject& response);    // to retrive selected plugin info(eg)
+            uint32_t getPluginTemplateStatus(const JsonObject& parameters, JsonObject& response);  // to retrieve plugin status(eg)
+            uint32_t getPluginTemplateList(const JsonObject& parameters, JsonObject& response);    // to get coonected plugins(eg)
+	    uint32_t getPluginTemplateInfo(const JsonObject& parameters, JsonObject& response);    // to retrive selected plugin info(eg)
 
 	    uint32_t getConnectedVideoDisplays(const JsonObject& parameters, JsonObject& response); // to get information about connected display
 
@@ -44,12 +44,12 @@ namespace WPEFramework {
 
 
         public:
-            MYPlugin();									// constructor
-            virtual ~MYPlugin();							// destructor
+            PluginTemplate();									// constructor
+            virtual ~PluginTemplate();							// destructor
             virtual const string Initialize(PluginHost::IShell* service) override;	//initialize IARM plugin services
             virtual void Deinitialize(PluginHost::IShell* service) override;		//deinitialize IARM plugin services
         public:
-            static MYPlugin* _instance;
+            static PluginTemplate* _instance;
 
         private:
             void InitializeIARM();										// calling IARM services

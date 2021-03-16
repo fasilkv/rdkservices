@@ -3,7 +3,7 @@
 #
 
 
-set(PLUGIN_NAME MYPlugin)                                 # to set a environment variable set(<variable> <value>)
+set(PLUGIN_NAME PluginTemplate)                                 # to set a environment variable set(<variable> <value>)
 set(MODULE_NAME ${NAMESPACE}${PLUGIN_NAME})
 
 find_package(${NAMESPACE}Plugins REQUIRED)                # to Finds and loads settings from an external project.
@@ -12,7 +12,7 @@ find_package(${NAMESPACE}Plugins REQUIRED)                # to Finds and loads s
 #Adds a library target called <name> to be built from the source files listed in the command invocation. The <name> corresponds to the logical target name and must be globally unique within a project.
 
 add_library(${MODULE_NAME} SHARED
-        MYPlugin.cpp
+        PluginTemplate.cpp
         Module.cpp
         ../helpers/utils.cpp)
 
